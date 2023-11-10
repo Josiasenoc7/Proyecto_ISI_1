@@ -5,6 +5,10 @@ from .models import Categoria, Clientes, Empleados, Producto, Proveedor, Inventa
 class TipoCargoListView(admin.ModelAdmin):
     list_display = ('id','nombre')
     search_fields = ('id','nombre')
+@admin.register(Proveedor)
+class ProveedorListView(admin.ModelAdmin):
+    list_display = ('id','nombre_proveedor','telefono', 'correo', 'direccion','rtn', 'fecha_registro')
+    search_fields = ('id','nombre_proveedor','telefono', 'correo', 'direccion','rtn', 'fecha_registro')
 
 '''
 @admin.register(Clientes)
@@ -41,7 +45,7 @@ class ProveedorListView(admin.ModelAdmin):
 admin.site.register(Clientes)
 admin.site.register(Empleados)
 admin.site.register(Producto)
-admin.site.register(Proveedor)
+#admin.site.register(Proveedor)
 admin.site.register(Categoria)
 admin.site.register(Inventario)
 #admin.site.register(TipoCargo)

@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 
-
 def validar_nombre(nombre):
     letras = sum(c.isalpha() for c in nombre)
     if letras < 3:
