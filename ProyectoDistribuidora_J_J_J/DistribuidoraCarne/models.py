@@ -1,8 +1,8 @@
 from django.db import models
 from DistribuidoraCarne.validaciones import validar_nombre,validar_telefono,validar_correo,validar_date_time,validar_descripcion,validar_estado,validar_direccion
 from DistribuidoraCarne.validaciones import validar_rtn,validar_fecha_nacimiento,validar_nivel_maximo_stock,validar_nivel_minimo_stock
-from DistribuidoraCarne.validaciones import validar_date_time, validar_salario
-from DistribuidoraCarne.validaciones import validar_nombre
+from DistribuidoraCarne.validaciones import validar_date_time, validar_salario, validar_fecha_actualizacion, validar_salario_base, validar_id, validar_stock_actual,validar_Cantidad
+from DistribuidoraCarne.validaciones import validar_Total_Cotizacion
 
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=50, default='Identidad')
@@ -10,12 +10,12 @@ class TipoDocumento(models.Model):
         return self.nombre
     
 class TipoCargo(models.Model):
-    nombre = models.CharField(max_length=50)
-    descripcion = models.CharField(max_length=200)
-    salario_base = models.DecimalField(max_digits=10, decimal_places=2)
-    fecha_creacion = models.DateField(auto_now_add=True)
-    ultima_actualizacion = models.DateField()
-    descripcion_actualizacion = models.CharField(max_length=255)
+    nombre = models.CharField(max_length=50, validators=[validar_nombre])
+    descripcion = models.CharField(max_length=200, validators=[validar_descripcion])
+    salario_base = models.DecimalField(max_digits=10, decimal_places=2, validators=[validar_salario_base])
+    fecha_creacion = models.DateField(auto_now_add=True, validators=[validar_fecha_actualizacion])
+    ultima_actualizacion = models.DateField(validators=[validar_fecha_actualizacion])
+    descripcion_actualizacion = models.CharField(max_length=255, validators=[validar_descripcion])
     
     def __str__(self):
         return self.nombre
@@ -34,10 +34,10 @@ class Sucursal(models.Model):
         verbose_name_plural = 'Surcusales'  
     
 class Clientes(models.Model):
-    id_cliente = models.CharField(max_length=15)  # Campo para el número de identificación
+    id_cliente = models.CharField(max_length=15, validators=[validar_id])  # Campo para el número de identificación
     nombre_cliente = models.CharField(max_length=65,validators=[validar_nombre])
     telefono = models.CharField(max_length=20, validators=[validar_telefono])
-    rtn = models.CharField(max_length=14)
+    rtn = models.CharField(max_length=14, validators=[validar_rtn])
     correo = models.CharField(max_length=50, validators=[validar_correo])
     direccion = models.CharField(max_length=150, validators=[validar_direccion])
     tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.CASCADE, default=1)
@@ -52,7 +52,7 @@ def __str__(self):
 
 
 class Empleados(models.Model):
-    id_empleado = models.CharField(max_length=15)  # Campo para el número de identificación
+    id_empleado = models.CharField(max_length=15, validators= [validar_id])# Campo para el número de identificación
     nombre_empleado = models.CharField(max_length=65 ,validators=[validar_nombre])
     fecha_nacimiento = models.DateField(validators=[validar_fecha_nacimiento])
     salario = models.DecimalField(max_digits=10, decimal_places=2,validators=[validar_salario])
@@ -73,7 +73,7 @@ class Empleados(models.Model):
   
 class Categoria(models.Model):
     nombre_categoria = models.CharField(max_length=65, validators=[validar_nombre])
-    stock_actual = models.CharField(max_length=4)
+    stock_actual = models.CharField(max_length=4, validators=[validar_stock_actual])
     estado  = models.BooleanField(null=True, validators=[validar_estado])
 
     def __str__(self):
@@ -99,9 +99,9 @@ class Proveedor(models.Model):
 class Producto(models.Model):
     nombre_producto = models.CharField(max_length=50, validators=[validar_nombre])
     descripcion = models.CharField(max_length=255,validators=[validar_descripcion])
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2,default=150)
-    precio_venta = models.DecimalField(max_digits=10, decimal_places=2,default=200)
-    stock = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2,default=150, validators=[validar_salario])
+    precio_venta = models.DecimalField(max_digits=10, decimal_places=2,default=200, validators=[validar_salario])
+    stock = models.PositiveIntegerField(validators=[validar_stock_actual])
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE,default=1)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE,default=1)
     fecha_agregado = models.DateField(validators=[validar_date_time])
@@ -116,13 +116,43 @@ class Inventario(models.Model):
     nombre = models.CharField(max_length=65, default='Inventario',validators=[validar_nombre])
     fecha_entrada = models.DateTimeField(validators=[validar_date_time])
     fecha_vencimiento = models.DateField()
-    cantidad = models.PositiveIntegerField() #tiene que hacer la suma en lo que hay en cantidad y el agg de stock de nuevo pedido producto
+    cantidad = models.PositiveIntegerField(validators=[validar_Cantidad]) 
     nivel_minimo_stock_inventario = models.DecimalField(max_digits=10, decimal_places=2)
     nivel_maximo_stock_inventario = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.nombre
 
+
+class Devoluciones(models.Model):
+    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE,default=1)
+    cantidad = models.IntegerField(validators=[validar_Cantidad])
+    descripcion = models.CharField(max_length=255,validators=[validar_descripcion])
+    fecha_devolucion = models.DateField(validators=[validar_date_time])
+
+
+    class Meta:
+        verbose_name = 'Devolucion'
+        verbose_name_plural = 'Devoluciones'  
+
+    def _str_(self):
+        return self.descripcion
+
+
+class Cotizacion(models.Model):
+    id_cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
+    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    fecha_cotizacion = models.DateField(max_length=12, validators=[validar_date_time])
+    total_cotizacion = models.DecimalField(max_digits=10, decimal_places=2, validators=[validar_Total_Cotizacion])
+   
+
+    class Meta:
+        verbose_name = 'Cotizacion'
+        verbose_name_plural = 'Cotizaciones'  
+    
+
+    def _str_(self):
+        return self.id_cliente
 
     
 

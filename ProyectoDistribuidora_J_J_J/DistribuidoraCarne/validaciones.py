@@ -39,7 +39,7 @@ def validar_telefono(telefono):
         raise ValidationError('El número de teléfono debe tener exactamente 8 dígitos.')
 
     if not re.match(r'^[23789]', telefono):
-        raise ValidationError('El número de teléfono debe comenzar con 2, 3, 8 o 9.')
+        raise ValidationError('El número de teléfono debe comenzar con 2, 3,7, 8 o 9.')
 
 def validar_direccion(direccion):
     letras = sum(c.isalpha() for c in direccion)
@@ -259,3 +259,56 @@ def validar_date_time(date_time):
         raise ValidationError('La fecha de creación no puede ser en el futuro.')
     if date_time < timezone.now().date(): 
         raise ValidationError("La fecha de registro no puede ser en el pasado.")
+    
+def validar_fecha_actualizacion(date_time):
+    # Validación de fecha futura
+    if date_time > timezone.now().date():
+        raise ValidationError('La fecha de creación no puede ser en el futuro.')
+
+
+def validar_salario_base(salario):
+    errores = []
+
+    # Validar que el precio de venta sea un valor no negativo.
+    if salario < 0:
+        errores.append("El salario base no puede ser negativo.")
+
+
+
+def validar_stock_actual(stock_actual):
+    errores = []
+
+    # Validar que el precio de venta sea un valor no negativo.
+    if stock_actual< 0:
+        errores.append("El stock actual no puede ser negativo.")
+
+
+
+
+
+def validar_id(id):
+    errores = []
+
+    # Validar que el RTN tenga exactamente 13 caracteres.
+    if len(id) != 14:
+        errores.append("El id debe tener exactamente 13 caracteres.")
+
+    # Validar que el RTN contenga solo dígitos.
+    if not id.isdigit():
+        errores.append("El id debe contener solo dígitos (números).")
+
+    
+def validar_Cantidad(Cantidad):
+    errores = []
+
+    # Validar que el precio de venta sea un valor no negativo.
+    if Cantidad< 0:
+        errores.append("La cantidad no puede ser un valor negativo.")
+
+
+def validar_Total_Cotizacion(Total_Cotizacion):
+    errores = []
+
+    # Validar que el precio de venta sea un valor no negativo.
+    if Total_Cotizacion< 0:
+        errores.append("El total de la cotizacion no puede ser un valor negativo.")

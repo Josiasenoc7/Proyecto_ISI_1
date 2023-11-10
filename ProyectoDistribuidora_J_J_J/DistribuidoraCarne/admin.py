@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Clientes, Empleados, Producto, Proveedor, Inventario,TipoCargo,TipoDocumento,Sucursal
+from .models import Categoria, Clientes, Empleados, Producto, Proveedor, Inventario,TipoCargo,TipoDocumento,Sucursal, Devoluciones, Cotizacion
 
 @admin.register(TipoCargo)
 class TipoCargoListView(admin.ModelAdmin):
@@ -51,5 +51,7 @@ admin.site.register(Inventario)
 #admin.site.register(TipoCargo)
 admin.site.register(TipoDocumento)
 admin.site.register(Sucursal)
+admin.site.register(Devoluciones)
+admin.site.register(Cotizacion)
 
 
