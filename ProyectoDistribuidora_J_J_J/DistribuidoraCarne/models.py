@@ -2,6 +2,7 @@ from django.db import models
 from DistribuidoraCarne.validaciones import validar_nombre,validar_telefono,validar_correo,validar_date_time,validar_descripcion,validar_estado,validar_direccion
 from DistribuidoraCarne.validaciones import validar_rtn,validar_fecha_nacimiento,validar_nivel_maximo_stock,validar_nivel_minimo_stock
 from DistribuidoraCarne.validaciones import validar_date_time, validar_salario
+from DistribuidoraCarne.validaciones import validar_nombre
 
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=50, default='Identidad')
@@ -9,7 +10,13 @@ class TipoDocumento(models.Model):
         return self.nombre
     
 class TipoCargo(models.Model):
-    nombre = models.CharField(max_length=50,default='Empleado')
+    nombre = models.CharField(max_length=50)
+    descripcion = models.CharField(max_length=200)
+    salario_base = models.DecimalField(max_digits=10, decimal_places=2)
+    fecha_creacion = models.DateField(auto_now_add=True)
+    ultima_actualizacion = models.DateField()
+    descripcion_actualizacion = models.CharField(max_length=255)
+    
     def __str__(self):
         return self.nombre
     
@@ -27,9 +34,10 @@ class Sucursal(models.Model):
         verbose_name_plural = 'Surcusales'  
     
 class Clientes(models.Model):
-    id_cliente = models.CharField(max_length=15, default='0801199900123')  # Campo para el número de identificación
+    id_cliente = models.CharField(max_length=15)  # Campo para el número de identificación
     nombre_cliente = models.CharField(max_length=65,validators=[validar_nombre])
     telefono = models.CharField(max_length=20, validators=[validar_telefono])
+    rtn = models.CharField(max_length=14)
     correo = models.CharField(max_length=50, validators=[validar_correo])
     direccion = models.CharField(max_length=150, validators=[validar_direccion])
     tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.CASCADE, default=1)
@@ -44,7 +52,7 @@ def __str__(self):
 
 
 class Empleados(models.Model):
-    id_empleado = models.CharField(max_length=15, default='0801199900123')  # Campo para el número de identificación
+    id_empleado = models.CharField(max_length=15)  # Campo para el número de identificación
     nombre_empleado = models.CharField(max_length=65 ,validators=[validar_nombre])
     fecha_nacimiento = models.DateField(validators=[validar_fecha_nacimiento])
     salario = models.DecimalField(max_digits=10, decimal_places=2,validators=[validar_salario])
@@ -65,6 +73,7 @@ class Empleados(models.Model):
   
 class Categoria(models.Model):
     nombre_categoria = models.CharField(max_length=65, validators=[validar_nombre])
+    stock_actual = models.CharField(max_length=4)
     estado  = models.BooleanField(null=True, validators=[validar_estado])
 
     def __str__(self):
@@ -78,7 +87,7 @@ class Proveedor(models.Model):
     rtn = models.CharField(max_length=14,validators=[validar_rtn])
     nombre_proveedor = models.CharField(max_length=65, validators=[validar_nombre])
     celular_contacto = models.CharField(max_length=8,validators=[validar_telefono])
-    fecha_registro = models.DateField(validators=[validar_date_time])
+    fecha_registro = models.DateField(auto_now_add=True, validators=[validar_date_time])
 
     class Meta:
         verbose_name = 'Proveedor'
@@ -104,8 +113,8 @@ class Producto(models.Model):
 
 class Inventario(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    nombre = models.CharField(max_length=65, default='Inventario')
-    fecha_entrada = models.DateTimeField()
+    nombre = models.CharField(max_length=65, default='Inventario',validators=[validar_nombre])
+    fecha_entrada = models.DateTimeField(validators=[validar_date_time])
     fecha_vencimiento = models.DateField()
     cantidad = models.PositiveIntegerField() #tiene que hacer la suma en lo que hay en cantidad y el agg de stock de nuevo pedido producto
     nivel_minimo_stock_inventario = models.DecimalField(max_digits=10, decimal_places=2)

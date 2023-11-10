@@ -38,10 +38,6 @@ class TipoCargoDeleteView(DeleteView):
     context_object_name = 'tipo_cargo'  # Nombre de la variable en la plantilla
     success_url = reverse_lazy('tipo-cargo-list')
     
-    
-    
-    
-    
 
 # Vista basada en clase para listar las sucursales
 class SucursalListView(ListView):
