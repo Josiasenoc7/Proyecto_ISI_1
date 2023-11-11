@@ -2,7 +2,7 @@ from django.db import models
 from DistribuidoraCarne.validaciones import validar_nombre,validar_telefono,validar_correo,validar_date_time,validar_descripcion,validar_estado,validar_direccion
 from DistribuidoraCarne.validaciones import validar_rtn,validar_fecha_nacimiento,validar_nivel_maximo_stock,validar_nivel_minimo_stock
 from DistribuidoraCarne.validaciones import validar_date_time, validar_salario, validar_fecha_actualizacion, validar_salario_base, validar_id, validar_stock_actual,validar_Cantidad
-from DistribuidoraCarne.validaciones import validar_Total_Cotizacion
+from DistribuidoraCarne.validaciones import validar_Total_Cotizacion,validar_numero_tarjeta,validar_fecha_vencimiento,validar_cvv,validar_valor_impuesto,validar_nombre_titular,validar_nombre_negocio
 
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=50, default='Identidad')
@@ -45,12 +45,10 @@ class Clientes(models.Model):
     class Meta:
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'
-
-def __str__(self):
-     return self.nombre_cliente
+        
+        def __str__(self):
+            return self.nombre_cliente
     
-
-
 class Empleados(models.Model):
     id_empleado = models.CharField(max_length=15, validators= [validar_id])# Campo para el número de identificación
     nombre_empleado = models.CharField(max_length=65 ,validators=[validar_nombre])
@@ -110,7 +108,6 @@ class Producto(models.Model):
     def __str__(self):
         return self.nombre_producto
     
-
 class Inventario(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=65, default='Inventario',validators=[validar_nombre])
@@ -122,7 +119,6 @@ class Inventario(models.Model):
 
     def __str__(self):
         return self.nombre
-
 
 class Devoluciones(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE,default=1)
@@ -137,7 +133,6 @@ class Devoluciones(models.Model):
 
     def _str_(self):
         return self.descripcion
-
 
 class Cotizacion(models.Model):
     id_cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
@@ -154,6 +149,52 @@ class Cotizacion(models.Model):
     def _str_(self):
         return self.id_cliente
 
+# Aqui trabajo Javier y se estan agregando los models de mpuesto, metodo de pago y encabezado de factura
+class Impuesto(models.Model):
+    id_impuesto = models.AutoField(primary_key=True)
+    nombre_impuesto = models.CharField(max_length=20,validators=[validar_nombre])
+    tipo_impuesto = models.CharField(max_length=50,validators=[validar_descripcion])
+    valor_impuesto = models.DecimalField(max_digits=5, decimal_places=2,default=00.00, validators=[validar_valor_impuesto])
+
+    def __str__(self):
+        return f"{self.tipo_impuesto} - {self.nombre_impuesto}"
+
+    class Meta:
+        db_table = 'impuesto'
     
+class MetodoPago(models.Model):
+    DEBITO = 'debito'
+    CREDITO = 'credito'
 
+    TIPO_METODO_CHOICES = [
+        (DEBITO, 'Débito'),
+        (CREDITO, 'Crédito'),
+    ]
 
+    id_metodo_pago = models.AutoField(primary_key=True)
+    id_cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
+    tipo_metodo_pago = models.CharField(max_length=50, choices=TIPO_METODO_CHOICES, validators=[validar_descripcion])
+    numero_tarjeta = models.CharField(max_length=25, validators=[validar_numero_tarjeta])
+    fecha_vencimiento = models.DateField(validators=[validar_fecha_vencimiento])
+    cvv = models.CharField(max_length=4, validators=[validar_cvv])
+    nombre_titular = models.CharField(max_length=60, validators=[validar_nombre_titular])
+
+    def __str__(self):
+        return f"{self.get_tipo_metodo_pago_display()}"
+
+    class Meta:
+        db_table = 'metodo_pago'
+
+class EncabezadoFactura(models.Model):
+    id_encabezado = models.AutoField(primary_key=True)
+    nombre_negocio = models.CharField(max_length=200, validators=[validar_nombre_negocio])
+    direccion_negocio = models.CharField(max_length=200, validators=[validar_direccion])
+    correo = models.CharField(max_length=100, null=True, validators=[validar_correo])
+    rtn = models.CharField(max_length=20, validators=[validar_rtn])
+    telefono = models.CharField(max_length=20, null=True, validators=[validar_telefono])
+
+    def __str__(self):
+        return f"{self.nombre_negocio} - {self.rtn}"
+
+    class Meta:
+        db_table = 'encabezado_factura'

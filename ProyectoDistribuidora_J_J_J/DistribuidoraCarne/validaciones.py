@@ -79,7 +79,7 @@ def validar_salario(salario):
     # Validación de salario máximo
     salario_maximo = 150000  # Ajusta esto al salario máximo permitido
     if salario > salario_maximo:
-        raise ValidationError('El salario no puede ser mayor que el salario máximo.')
+        raise ValidationError('El salario no puede ser mayor que el salario máximo.')
 
 def validar_cargo(cargo):
     errores = []
@@ -252,7 +252,6 @@ def validar_total_pedido(pedido):
     if pedido < 0:
         raise ValidationError('El pedido no puede ser negativo.')
 
-
 def validar_date_time(date_time):
     # Validación de fecha futura
     if date_time > timezone.now().date():
@@ -265,7 +264,6 @@ def validar_fecha_actualizacion(date_time):
     if date_time > timezone.now().date():
         raise ValidationError('La fecha de creación no puede ser en el futuro.')
 
-
 def validar_salario_base(salario):
     errores = []
 
@@ -273,18 +271,12 @@ def validar_salario_base(salario):
     if salario < 0:
         errores.append("El salario base no puede ser negativo.")
 
-
-
 def validar_stock_actual(stock_actual):
     errores = []
 
     # Validar que el precio de venta sea un valor no negativo.
     if stock_actual< 0:
         errores.append("El stock actual no puede ser negativo.")
-
-
-
-
 
 def validar_id(id):
     errores = []
@@ -296,8 +288,7 @@ def validar_id(id):
     # Validar que el RTN contenga solo dígitos.
     if not id.isdigit():
         errores.append("El id debe contener solo dígitos (números).")
-
-    
+ 
 def validar_Cantidad(Cantidad):
     errores = []
 
@@ -305,10 +296,116 @@ def validar_Cantidad(Cantidad):
     if Cantidad< 0:
         errores.append("La cantidad no puede ser un valor negativo.")
 
-
 def validar_Total_Cotizacion(Total_Cotizacion):
     errores = []
 
     # Validar que el precio de venta sea un valor no negativo.
     if Total_Cotizacion< 0:
         errores.append("El total de la cotizacion no puede ser un valor negativo.")
+
+def validar_numero_tarjeta(numero_tarjeta):
+    numero_tarjeta_sin_formato = re.sub(r'\s|-', '', numero_tarjeta)
+
+    if not numero_tarjeta_sin_formato.isdigit():
+        raise ValidationError('El número de tarjeta debe contener solo dígitos.')
+
+    longitud_esperada = 16
+    if len(numero_tarjeta_sin_formato) != longitud_esperada:
+        raise ValidationError(f'El número de tarjeta debe tener {longitud_esperada} dígitos.')
+
+    # Aplicar el algoritmo de Luhn
+    digitos = list(map(int, numero_tarjeta_sin_formato[::-1]))
+    suma = 0
+
+    for i in range(len(digitos)):
+        if i % 2 == 1:
+            digito_doble = digitos[i] * 2
+            suma += digito_doble if digito_doble < 10 else digito_doble - 9
+        else:
+            suma += digitos[i]
+
+    if suma % 10 != 0:
+        raise ValidationError('El número de tarjeta no es válido según el algoritmo de Luhn.')
+    
+    return numero_tarjeta_sin_formato
+
+def validar_fecha_vencimiento(fecha_vencimiento):
+    # Verificar si la fecha de vencimiento es posterior a la fecha actual
+    if fecha_vencimiento < date.today():
+        raise ValidationError('La fecha de vencimiento no puede ser en el pasado.')
+
+    # Verificar si la fecha de vencimiento no está en el presente
+    if fecha_vencimiento == date.today():
+        raise ValidationError('La fecha de vencimiento no puede ser la fecha actual.')
+
+    # Verificar si la fecha de vencimiento cumple con el formato MM/YY
+    if not re.match(r'^\d{2}/\d{2}$', fecha_vencimiento.strftime('%m/%y')):
+        raise ValidationError('La fecha de vencimiento debe tener el formato MM/YY.')
+
+    return fecha_vencimiento
+
+def validar_cvv(cvv):
+    # Verificar que el CVV sea numérico y tenga la longitud esperada (puedes ajustar según sea necesario)
+    if not cvv.isdigit():
+        raise ValidationError('El CVV debe contener solo dígitos.')
+
+    longitud_esperada = 3  # Puedes ajustar esto para CVV de 4 dígitos si es necesario
+    if len(cvv) != longitud_esperada:
+        raise ValidationError(f'El CVV debe tener {longitud_esperada} dígitos.')
+
+    return cvv
+
+def validar_nombre_titular(nombre):
+    letras = sum(c.isalpha() for c in nombre)
+    if letras < 1:
+        raise ValidationError('El nombre debe contener al menos 1 letras.')
+    if re.search(r'\d', nombre):
+        raise ValidationError('El nombre no puede contener números.')
+
+    if re.search(r'(\w)\1\1', nombre):
+        raise ValidationError('El nombre no puede contener tres letras repetidas.')
+
+    if re.search(r'\s{3,}', nombre):
+        raise ValidationError('El nombre no puede contener más de dos espacios de separación.')
+    
+    if re.search('[^a-zA-Z0-9 ]', nombre):
+        raise ValidationError('El nombre no puede contener caracteres especiales ni signos de puntuación.')
+
+def validar_valor_impuesto(valor):
+    try:
+        # Intentar convertir la entrada a un número decimal
+        valor_decimal = float(str(valor).replace(',', '.'))
+
+        # Verificar que el valor del impuesto sea un número decimal positivo
+        if not isinstance(valor_decimal, (int, float)) or valor_decimal < 0:
+            raise ValidationError('El valor del impuesto debe ser un número decimal positivo.')
+
+        # Verificar que el valor tenga como máximo dos decimales
+        cantidad_decimales = len(str(valor_decimal).split('.')[-1])
+        if cantidad_decimales > 2:
+            raise ValidationError('El valor del impuesto debe tener como máximo dos decimales.')
+
+        # Verificar que el valor tenga como máximo 5 dígitos en total
+        if len(str(valor_decimal).replace('.', '')) > 5:
+            raise ValidationError('El valor del impuesto no puede tener más de 5 dígitos en total.')
+
+    except ValueError:
+        raise ValidationError('El valor del impuesto no es válido.')
+
+    return valor
+
+def validar_nombre_negocio(nombre):
+    letras = sum(c.isalpha() for c in nombre)
+    if letras < 3:
+        raise ValidationError('El nombre debe contener al menos tres letras.')
+    if re.search(r'\d', nombre):
+        raise ValidationError('El nombre no puede contener números.')
+
+    if re.search(r'(\w)\1\1\1', nombre):
+        raise ValidationError('El nombre no puede contener cuatro letras repetidas.')
+
+    if re.search(r'\s{3,}', nombre):
+        raise ValidationError('El nombre no puede contener más de dos espacios de separación.')
+    
+    if re.search('[^a-zA-Z0-9 ]', nombre):
+        raise ValidationError('El nombre no puede contener caracteres especiales ni signos de puntuación.')

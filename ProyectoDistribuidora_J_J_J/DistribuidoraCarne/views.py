@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Categoria, Clientes, Empleados, Producto, Proveedor, Sucursal, TipoCargo,TipoDocumento
+from .models import Categoria, Clientes, Empleados, Producto, Proveedor, Sucursal, TipoCargo,TipoDocumento,Impuesto, MetodoPago, EncabezadoFactura
 from django.urls import reverse_lazy
 
 
@@ -10,8 +10,6 @@ class TipoCargoListView(ListView):
     model = TipoCargo
     template_name = 'tipo_cargo_list.html'  # Reemplaza con la ruta de tu plantilla HTML
     context_object_name = 'tipos_cargo'  # Nombre de la variable en la plantilla
-
-
 # Vista basada en clase para ver los detalles de un tipo de cargo
 class TipoCargoDetailView(DetailView):
     model = TipoCargo
@@ -23,7 +21,6 @@ class TipoCargoCreateView(CreateView):
     template_name = 'tipo_cargo_form.html'  # Reemplaza con la ruta de tu plantilla HTML
     fields = ['nombre']
     success_url = reverse_lazy('tipo_cargo_list')
-
 # Vista basada en clase para actualizar un tipo de cargo existente
 class TipoCargoUpdateView(UpdateView):
     model = TipoCargo
@@ -37,7 +34,6 @@ class TipoCargoDeleteView(DeleteView):
     template_name = 'tipo_cargo_confirm_delete.html'  # Reemplaza con la ruta de tu plantilla HTML
     context_object_name = 'tipo_cargo'  # Nombre de la variable en la plantilla
     success_url = reverse_lazy('tipo-cargo-list')
-    
 
 # Vista basada en clase para listar las sucursales
 class SucursalListView(ListView):
@@ -94,15 +90,11 @@ class TipoDocumentoDeleteView(DeleteView):
     template_name = 'tipo_documento_confirm_delete.html'
 
 
-
-
-
 # Vista basada en clase para listar categorías
 class CategoriaListView(ListView):
     model = Categoria
     template_name = 'categoria_list.html'
     context_object_name = 'categorias'
-
 
 # Vista basada en clase para ver detalles de una categoría
 class CategoriaDetailView(DetailView):
@@ -128,12 +120,8 @@ class CategoriaDeleteView(DeleteView):
     template_name = 'categoria_confirm_delete.html'
     success_url = '/categorias/'  # Redirige a la lista de categorías
     
-    
-    
-    
 
 # Repite un patrón similar para los otros modelos (Clientes, Empleados, Producto, Proveedor).
-
 class ClientesListView(ListView):
     model = Clientes
     template_name = 'clientes_list.html'
@@ -164,8 +152,7 @@ class ClientesDeleteView(DeleteView):
     template_name = 'clientes_confirm_delete.html'
     success_url = '/clientes/'  # Redirige a la lista de clientes
 
-
-
+#Views de Empleados
 class EmpleadosListView(ListView):
     model = Empleados
     template_name = 'empleados/empleados_list.html'  # Reemplaza 'empleados_list.html' con la plantilla que desees
@@ -189,8 +176,7 @@ class EmpleadosDeleteView(DeleteView):
     success_url = reverse_lazy('empleados-list')
 
 
-
-
+#Views de Productos
 class ProductoListView(ListView):
     model = Producto
     template_name = 'producto/producto_list.html'  # Reemplaza 'producto_list.html' con la plantilla que desees
@@ -213,10 +199,7 @@ class ProductoDeleteView(DeleteView):
     template_name = 'producto/producto_confirm_delete.html'  # Reemplaza 'producto_confirm_delete.html' con la plantilla que desees
     success_url = reverse_lazy('producto-list')
 
-
-
-
-
+#Views Proveedores
 class ProveedorListView(ListView):
     model = Proveedor
     template_name = 'proveedor/proveedor_list.html'  # Reemplaza 'proveedor_list.html' con la plantilla que desees
@@ -240,6 +223,79 @@ class ProveedorDeleteView(DeleteView):
     success_url = reverse_lazy('proveedor-list')
 
 
+#Javier views Impuestos,MetodoPago y Encabezado de factura
+
+#Impuesto
+class ImpuestoListView(ListView):
+    model = Impuesto
+    template_name = 'impuesto/impuesto_list.html'  # Ajusta el nombre de la plantilla según sea necesario
+    context_object_name = 'impuestos'  # Nombre de la variable de contexto en la plantilla
+
+class ImpuestoCreateView(CreateView):
+    model = Impuesto
+    template_name = 'impuesto/impuesto_form.html'  # Ajusta el nombre de la plantilla según sea necesario
+    fields = ['nombre_impuesto','tipo_impuesto','valor_impuesto' ]  # Ajusta los campos según tu modelo
+    success_url = reverse_lazy('impuesto-list')
+
+class ImpuestoUpdateView(UpdateView):
+    model = Impuesto
+    template_name = 'impuesto/impuesto_form.html'  # Ajusta el nombre de la plantilla según sea necesario
+    fields = ['nombre_impuesto','tipo_impuesto','valor_impuesto' ]  # Ajusta los campos según tu modelo
+    success_url = reverse_lazy('impuesto-list')
+
+class ImpuestoDeleteView(DeleteView):
+    model = Impuesto
+    template_name = 'impuesto/impuesto_confirm_delete.html'  # Ajusta el nombre de la plantilla según sea necesario
+    success_url = reverse_lazy('impuesto-list')
+
+#Metodo de Pago
+class MetodoPagoListView(ListView):
+    model = MetodoPago
+    template_name = 'metodo_pago_list.html'
+    context_object_name = 'metodos_pago'
+
+class MetodoPagoCreateView(CreateView):
+    model = MetodoPago
+    template_name = 'metodo_pago_form.html'
+    # form_class = MetodoPagoForm
+    success_url = reverse_lazy('metodo_pago-list')
+    fields = ['tipo_metodo_pago', 'numero_tarjeta', 'fecha_vencimiento', 'cvv', 'nombre_titular']
+
+class MetodoPagoUpdateView(UpdateView):
+    model = MetodoPago
+    template_name = 'metodo_pago_form.html'
+    # form_class = MetodoPagoForm
+    success_url = reverse_lazy('metodo_pago-list')
+    fields = ['tipo_metodo_pago', 'numero_tarjeta', 'fecha_vencimiento', 'cvv', 'nombre_titular']
+
+class MetodoPagoDeleteView(DeleteView):
+    model = MetodoPago
+    template_name = 'metodo_pago_confirm_delete.html'  # Ajusta el nombre de la plantilla según sea necesario
+    success_url = reverse_lazy('metodo_pago-list')
+    
+
+#Encabezado de Factura
+class EncabezadoFacturaListView(ListView):
+    model = EncabezadoFactura
+    template_name = 'encabezado_factura_list.html'
+    context_object_name = 'encabezados_factura'
+
+class EncabezadoFacturaCreateView(CreateView):
+    model = EncabezadoFactura
+    template_name = 'encabezado_factura_form.html'
+    fields = ['nombre_negocio', 'direccion_negocio', 'correo', 'rtn', 'telefono' ]
+    success_url = reverse_lazy('encabezado_factura-list')
+
+class EncabezadoFacturaUpdateView(UpdateView):
+    model = EncabezadoFactura
+    template_name = 'encabezado_factura_form.html'
+    fields = ['nombre_negocio', 'direccion_negocio', 'correo', 'rtn', 'telefono' ]
+    success_url = reverse_lazy('encabezado_factura-list')
+
+class EncabezadoFacturaDeleteView(DeleteView):
+    model = EncabezadoFactura
+    template_name = 'encabezado_factura_confirm_delete.html'
+    success_url = reverse_lazy('encabezado_factura-list')
 
 # class CAIListView(ListView):
 #     model = CAI
