@@ -198,3 +198,4 @@ class EncabezadoFactura(models.Model):
 
     class Meta:
         db_table = 'encabezado_factura'
+
