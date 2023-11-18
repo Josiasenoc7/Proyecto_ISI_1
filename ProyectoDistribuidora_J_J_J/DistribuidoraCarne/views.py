@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Categoria, Clientes, Empleados, Producto, Proveedor, Sucursal, TipoCargo,TipoDocumento,Impuesto, MetodoPago, EncabezadoFactura
+from .models import Categoria, Clientes, Empleados, Producto, Proveedor, Sucursal, TipoCargo,TipoDocumento,Impuesto, EncabezadoFactura, HistorialCargo,Parametros_impuestos,PrecioHistorico
 from django.urls import reverse_lazy
 
 
@@ -223,7 +223,7 @@ class ProveedorDeleteView(DeleteView):
     success_url = reverse_lazy('proveedor-list')
 
 
-#Javier views Impuestos,MetodoPago y Encabezado de factura
+#Javier views Impuestos y Encabezado de factura
 
 #Impuesto
 class ImpuestoListView(ListView):
@@ -248,31 +248,6 @@ class ImpuestoDeleteView(DeleteView):
     template_name = 'impuesto/impuesto_confirm_delete.html'  # Ajusta el nombre de la plantilla según sea necesario
     success_url = reverse_lazy('impuesto-list')
 
-#Metodo de Pago
-class MetodoPagoListView(ListView):
-    model = MetodoPago
-    template_name = 'metodo_pago_list.html'
-    context_object_name = 'metodos_pago'
-
-class MetodoPagoCreateView(CreateView):
-    model = MetodoPago
-    template_name = 'metodo_pago_form.html'
-    # form_class = MetodoPagoForm
-    success_url = reverse_lazy('metodo_pago-list')
-    fields = ['tipo_metodo_pago', 'numero_tarjeta', 'fecha_vencimiento', 'cvv', 'nombre_titular']
-
-class MetodoPagoUpdateView(UpdateView):
-    model = MetodoPago
-    template_name = 'metodo_pago_form.html'
-    # form_class = MetodoPagoForm
-    success_url = reverse_lazy('metodo_pago-list')
-    fields = ['tipo_metodo_pago', 'numero_tarjeta', 'fecha_vencimiento', 'cvv', 'nombre_titular']
-
-class MetodoPagoDeleteView(DeleteView):
-    model = MetodoPago
-    template_name = 'metodo_pago_confirm_delete.html'  # Ajusta el nombre de la plantilla según sea necesario
-    success_url = reverse_lazy('metodo_pago-list')
-    
 
 #Encabezado de Factura
 class EncabezadoFacturaListView(ListView):
@@ -296,6 +271,101 @@ class EncabezadoFacturaDeleteView(DeleteView):
     model = EncabezadoFactura
     template_name = 'encabezado_factura_confirm_delete.html'
     success_url = reverse_lazy('encabezado_factura-list')
+
+# Vistas para HistorialCargo
+
+class HistorialCargoListView(ListView):
+    model = HistorialCargo
+    template_name = 'historial_cargo_list.html'
+    context_object_name = 'historial_cargos'
+
+class HistorialCargoDetailView(DetailView):
+    model = HistorialCargo
+    template_name = 'historial_cargo_detail.html'
+    context_object_name = 'historial_cargo'
+
+class HistorialCargoCreateView(CreateView):
+    model = HistorialCargo
+    template_name = 'historial_cargo_form.html'
+    fields = ['campo1', 'campo2']  # Reemplaza con los campos de tu modelo
+    success_url = reverse_lazy('historial_cargo-list')
+
+class HistorialCargoUpdateView(UpdateView):
+    model = HistorialCargo
+    template_name = 'historial_cargo_form.html'
+    fields = ['campo1', 'campo2']  # Reemplaza con los campos de tu modelo
+    success_url = reverse_lazy('historial_cargo-list')
+
+class HistorialCargoDeleteView(DeleteView):
+    model = HistorialCargo
+    template_name = 'historial_cargo_confirm_delete.html'
+    success_url = reverse_lazy('historial_cargo-list')
+
+
+# Vistas para Parametros_impuestos
+
+class ParametrosImpuestosListView(ListView):
+    model = Parametros_impuestos
+    template_name = 'parametros_impuestos_list.html'
+    context_object_name = 'parametros_impuestos'
+
+class ParametrosImpuestosDetailView(DetailView):
+    model = Parametros_impuestos
+    template_name = 'parametros_impuestos_detail.html'
+    context_object_name = 'parametros_impuesto'
+
+class ParametrosImpuestosCreateView(CreateView):
+    model = Parametros_impuestos
+    template_name = 'parametros_impuestos_form.html'
+    fields = ['campo1', 'campo2']  # Reemplaza con los campos de tu modelo
+    success_url = reverse_lazy('parametros_impuestos-list')
+
+class ParametrosImpuestosUpdateView(UpdateView):
+    model = Parametros_impuestos
+    template_name = 'parametros_impuestos_form.html'
+    fields = ['campo1', 'campo2']  # Reemplaza con los campos de tu modelo
+    success_url = reverse_lazy('parametros_impuestos-list')
+
+class ParametrosImpuestosDeleteView(DeleteView):
+    model = Parametros_impuestos
+    template_name = 'parametros_impuestos_confirm_delete.html'
+    success_url = reverse_lazy('parametros_impuestos-list')
+
+
+# Vistas para PrecioHistorico
+
+class PrecioHistoricoListView(ListView):
+    model = PrecioHistorico
+    template_name = 'precio_historico_list.html'
+    context_object_name = 'precios_historicos'
+
+class PrecioHistoricoDetailView(DetailView):
+    model = PrecioHistorico
+    template_name = 'precio_historico_detail.html'
+    context_object_name = 'precio_historico'
+
+class PrecioHistoricoCreateView(CreateView):
+    model = PrecioHistorico
+    template_name = 'precio_historico_form.html'
+    fields = ['campo1', 'campo2']  # Reemplaza con los campos de tu modelo
+    success_url = reverse_lazy('precio_historico-list')
+
+class PrecioHistoricoUpdateView(UpdateView):
+    model = PrecioHistorico
+    template_name = 'precio_historico_form.html'
+    fields = ['campo1', 'campo2']  # Reemplaza con los campos de tu modelo
+    success_url = reverse_lazy('precio_historico-list')
+
+class PrecioHistoricoDeleteView(DeleteView):
+    model = PrecioHistorico
+    template_name = 'precio_historico_confirm_delete.html'
+    success_url = reverse_lazy('precio_historico-list')
+
+
+
+
+
+
 
 # class CAIListView(ListView):
 #     model = CAI
