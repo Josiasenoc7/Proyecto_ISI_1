@@ -192,18 +192,21 @@ def validar_nivel_minimo_stock(nivel_minimo_stock):
     if errores:
         raise ValidationError(errores)  # Lanzar una excepción con la lista de errores si hubo problemas
     
-def validar_precioventa(precioventa):
+def validar_precio(precio):
     errores = []
 
     # Validar que el precio de venta sea un valor no negativo.
-    if precioventa < 0:
-        errores.append("El precio de venta no puede ser negativo.")
+    if precio< 0:
+        errores.append("El precio no puede ser negativo.")
+
+    if not precio.isdigit():
+        raise ValidationError('El precio solo debe contener números.')
 
     # Validar que el precio de venta sea un número decimal o entero.
 
     # Validar que el precio de venta tenga un máximo de 2 decimales.
-    if isinstance(precioventa, float) and int(precioventa * 100) != precioventa * 100:
-        errores.append("El precio de venta no puede tener más de 2 decimales.")
+    if isinstance(precio, float) and int(precio * 100) != precio * 100:
+        errores.append("El precio no puede tener más de 2 decimales.")
 
     # Otras validaciones personalizadas, si es necesario
     # Por ejemplo, verificar si el precio es válido para un rango específico.
@@ -409,3 +412,8 @@ def validar_nombre_negocio(nombre):
     
     if re.search('[^a-zA-Z0-9 ]', nombre):
         raise ValidationError('El nombre no puede contener caracteres especiales ni signos de puntuación.')
+
+def validar_total_pedido(pedido):
+    # Validación de salario negativo
+    if pedido < 0:
+        raise ValidationError('El pedido no puede ser negativo.')
