@@ -14,7 +14,7 @@ body {
     --nav-height: 25rem;
     font-size: 1.6rem;
     margin: 0;
-    padding-bottom: 330rem;
+    padding-bottom: 60rem;
     min-height: 100vh;
     flex-wrap: wrap;
     flex-direction:row;
@@ -32,6 +32,130 @@ body {
     background: url(./Logo/Background_Index.jpg);
     background-size: cover;
     background-position:center;
+}
+
+/*main*/
+.container-contact{
+    /* background-color: aquamarine; */
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+    padding: 2rem;
+    height: 70rem;
+}
+.container-contact .contact-title{
+    font-size: 2.5rem;
+    text-decoration:underline;
+    font-weight: 700;
+}
+.container-contact .container-info-contactanos{
+    display: flex;
+    text-align: center;
+    padding-top: 20rem;
+}
+.container-contact .container-info-contactanos .container-info{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    text-align: center;
+    height: 20rem;
+}
+.container-contact .container-info-contactanos .contact-item{
+    display: flex;
+    flex-direction: row;
+}
+.container-contact .container-info-contactanos .contact-item p{
+    margin-left: 1rem;
+}
+.container-contact .container-info-contactanos a{
+    color: black;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.container-contact .container-form-contactanos{
+    display: flex;
+    text-align: center;
+}
+.container-contact .container-form-contactanos .contact-form{
+    text-align: center;
+}
+.container-contact .container-form-contactanos .contact-form .contact-message{
+    padding-left: 7%;
+}
+/* Form */
+
+.form{
+    display: flex;
+    width: 90%;
+    max-width: 60rem;
+    padding: 2rem 5rem;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    
+}
+.form .input{
+    padding: 0.5rem;
+    
+}
+input[type="text"],
+input[type="email"]{
+    width: 97%;
+    padding: 10px;
+    border: 1px none #ccc;
+    border-radius: 3px;
+    font-size: 1.8rem;
+}
+textarea {
+    width: 97% !important;
+    height: 30%!important;
+    padding: 1rem;
+    border: 0px none #ccc;
+    border-radius: 3px;
+    font-size: 1.8rem;
+}
+.form .form-groups{
+    width: 100%;
+    height: 5rem;
+    line-height: 50px;
+    font-size: 17px;
+    border-radius: 3px;
+    border: 0px none #ccc;
+}
+.form .form-group .form-control{
+    width: 100%;
+    height: 5rem;
+    line-height: 50px;
+    font-size: 17px;
+    border-radius: 3px;
+}
+.form .form-control{
+    background-color: #f8f5ee;
+    border: 0px none #f8f5ee;
+    outline: none;
+}
+.btn{
+    display: block;
+    width: 100%;
+    border: none;
+    background: #000;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: .3s;
+    justify-content: center;
+}
+.btn:hover{
+    scale: 1.02;
 }
 
 /* Estilos para el logotipo */
@@ -161,7 +285,6 @@ body {
     color: lightgreen;
 }
 
-
 /* seccion carrito */
 .carrito{
     border: 1px solid #666;
@@ -249,7 +372,6 @@ body {
 .carrito .carrito-item .btn-eliminar i{
     pointer-events: none;
 }
-
 .carrito-total{
     background-color: #f3f3f3;
     padding: 30px;
@@ -287,7 +409,7 @@ body {
     position: absolute;
     /* height: 50vh; */
     /* padding-bottom: 110vh; */
-    width: 100%;
+    width: 99%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -295,7 +417,6 @@ body {
     color: white;
     bottom: 0; 
 }
-
 .footer1 .footer-social {
     width: 100%;
     margin: auto;
@@ -343,12 +464,13 @@ body {
     background-color: #0a1a2a;
     padding: 1.5rem 1rem;
     text-align: center;
-    width: 100%;
+    width: 99%;
     color: #ffffff;
 }
 .footer1 .footer-info small{
     font-size: 1.5rem;
 }
+
 /* SECCION RESPONSIVE */
 /* @media screen and (max-width: 850px) {
     .contenedor {
