@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Categoria, Clientes, Empleados, Producto, Proveedor, Sucursal, TipoCargo,TipoDocumento,Impuesto, EncabezadoFactura, HistorialCargo,Parametros_impuestos,PrecioHistorico
+from .models import Categoria, CAI, Pedido, Entrega, MetodoPago,  Clientes, Empleados, Producto, Proveedor, Sucursal, TipoCargo,TipoDocumento,Impuesto, EncabezadoFactura, HistorialCargo,Parametros_impuestos,PrecioHistorico
 from django.urls import reverse_lazy
 
 
@@ -367,26 +367,118 @@ class PrecioHistoricoDeleteView(DeleteView):
 
 
 
-# class CAIListView(ListView):
-#     model = CAI
-#     template_name = 'cai/cai_list.html'  # Reemplaza 'cai_list.html' con la plantilla que desees
-#     context_object_name = 'cais'  # Nombre de la variable de contexto en la plantilla
+class CAIListView(ListView):
+    model = CAI
+    template_name = 'cai/cai_list.html'  # Reemplaza 'cai_list.html' con la plantilla que desees
+    context_object_name = 'cais'  # Nombre de la variable de contexto en la plantilla
 
-# class CAICreateView(CreateView):
-#     model = CAI
-#     template_name = 'cai/cai_form.html'  # Reemplaza 'cai_form.html' con la plantilla que desees
-#     fields = ['rango_inicial_factura', 'rango_final_factura', 'fecha_emision', 'fecha_vencimiento', 'sucursal', 'tipo_comprobante', 'activo', 'usuario_creacion', 'fecha_creacion', 'usuario_modificacion', 'fecha_modificacion']
-#     success_url = reverse_lazy('cai-list')
+class CAICreateView(CreateView):
+    model = CAI
+    template_name = 'cai/cai_form.html'  # Reemplaza 'cai_form.html' con la plantilla que desees
+    fields = ['rango_inicial_factura', 'rango_final_factura', 'fecha_emision', 'fecha_vencimiento', 'sucursal', 'tipo_comprobante', 'activo', 'usuario_creacion', 'fecha_creacion', 'usuario_modificacion', 'fecha_modificacion']
+    success_url = reverse_lazy('cai-list')
 
-# class CAIUpdateView(UpdateView):
-#     model = CAI
-#     template_name = 'cai/cai_form.html'  # Reemplaza 'cai_form.html' con la plantilla que desees
-#     fields = ['rango_inicial_factura', 'rango_final_factura', 'fecha_emision', 'fecha_vencimiento', 'sucursal', 'tipo_comprobante', 'activo', 'usuario_creacion', 'fecha_creacion', 'usuario_modificacion', 'fecha_modificacion']
-#     success_url = reverse_lazy('cai-list')
+class CAIUpdateView(UpdateView):
+    model = CAI
+    template_name = 'cai/cai_form.html'  # Reemplaza 'cai_form.html' con la plantilla que desees
+    fields = ['rango_inicial_factura', 'rango_final_factura', 'fecha_emision', 'fecha_vencimiento', 'sucursal', 'tipo_comprobante', 'activo', 'usuario_creacion', 'fecha_creacion', 'usuario_modificacion', 'fecha_modificacion']
+    success_url = reverse_lazy('cai-list')
 
-# class CAIDeleteView(DeleteView):
-#     model = CAI
-#     template_name = 'cai/cai_confirm_delete.html'  # Reemplaza 'cai_confirm_delete.html' con la plantilla que desees
-#     success_url = reverse_lazy('cai-list')
+class CAIDeleteView(DeleteView):
+    model = CAI
+    template_name = 'cai/cai_confirm_delete.html'  # Reemplaza 'cai_confirm_delete.html' con la plantilla que desees
+    success_url = reverse_lazy('cai-list')
+
+
+
+class PedidoListView(ListView):
+    model = Pedido
+    template_name = 'pedido_list.html'
+    context_object_name = 'pedidos'
+
+class PedidoDetailView(DetailView):
+    model = Pedido
+    template_name = 'pedido_detail.html'
+    context_object_name = 'pedido'
+
+class PedidoCreateView(CreateView):
+    model = Pedido
+    template_name = 'pedido_form.html'
+    fields = ['fecha_pedido', 'total_pedido', 'cliente']
+    success_url = reverse_lazy('pedido_list')
+
+class PedidoUpdateView(UpdateView):
+    model = Pedido
+    template_name = 'pedido_form.html'
+    fields = ['fecha_pedido', 'total_pedido', 'cliente']
+    context_object_name = 'pedido'
+    success_url = reverse_lazy('pedido_list')
+
+class PedidoDeleteView(DeleteView):
+    model = Pedido
+    template_name = 'pedido_confirm_delete.html'
+    context_object_name = 'pedido'
+    success_url = reverse_lazy('pedido_list')
+
+
+# Vistas para Entrega
+class EntregaListView(ListView):
+    model = Entrega
+    template_name = 'entrega_list.html'
+    context_object_name = 'entregas'
+
+class EntregaDetailView(DetailView):
+    model = Entrega
+    template_name = 'entrega_detail.html'
+    context_object_name = 'entrega'
+
+class EntregaCreateView(CreateView):
+    model = Entrega
+    template_name = 'entrega_form.html'
+    fields = ['id_cliente', 'id_pedido', 'id_empleado', 'id_producto', 'fecha_entrega', 'hora_entrega', 'direccion_entrega', 'estado_entrega', 'costo_entrega', 'factura']
+    success_url = reverse_lazy('entrega_list')
+
+class EntregaUpdateView(UpdateView):
+    model = Entrega
+    template_name = 'entrega_form.html'
+    fields = ['id_cliente', 'id_pedido', 'id_empleado', 'id_producto', 'fecha_entrega', 'hora_entrega', 'direccion_entrega', 'estado_entrega', 'costo_entrega', 'factura']
+    context_object_name = 'entrega'
+    success_url = reverse_lazy('entrega_list')
+
+class EntregaDeleteView(DeleteView):
+    model = Entrega
+    template_name = 'entrega_confirm_delete.html'
+    context_object_name = 'entrega'
+    success_url = reverse_lazy('entrega_list')
+
+# Vistas para MetodoPago
+class MetodoPagoListView(ListView):
+    model = MetodoPago
+    template_name = 'metodopago_list.html'
+    context_object_name = 'metodospago'
+
+class MetodoPagoDetailView(DetailView):
+    model = MetodoPago
+    template_name = 'metodopago_detail.html'
+    context_object_name = 'metodopago'
+
+class MetodoPagoCreateView(CreateView):
+    model = MetodoPago
+    template_name = 'metodopago_form.html'
+    fields = ['id_cliente', 'tipo_metodo_pago', 'nombre_titular', 'numero_tarjeta', 'fecha_vencimiento', 'cvv']
+    success_url = reverse_lazy('metodopago_list')
+
+class MetodoPagoUpdateView(UpdateView):
+    model = MetodoPago
+    template_name = 'metodopago_form.html'
+    fields = ['id_cliente', 'tipo_metodo_pago', 'nombre_titular', 'numero_tarjeta', 'fecha_vencimiento', 'cvv']
+    context_object_name = 'metodopago'
+    success_url = reverse_lazy('metodopago_list')
+
+class MetodoPagoDeleteView(DeleteView):
+    model = MetodoPago
+    template_name = 'metodopago_confirm_delete.html'
+    context_object_name = 'metodopago'
+    success_url = reverse_lazy('metodopago_list')
 
 

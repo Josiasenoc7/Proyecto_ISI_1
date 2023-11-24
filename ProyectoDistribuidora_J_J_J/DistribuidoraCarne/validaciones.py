@@ -172,8 +172,7 @@ def validar_nivel_maximo_stock(nivel_maximo_stock):
         errores.append(f"El nivel máximo de stock no puede superar {valor_maximo_permitido}.")
 
     # Validar que el nivel_maximo_stock sea un número entero.
-    if not isinstance(nivel_maximo_stock, int):
-        errores.append("El nivel máximo de stock debe ser un número entero.")
+    
 
     if errores:
         raise ValidationError(errores)  # Lanzar una excepción con la lista de errores si hubo problemas
@@ -186,9 +185,7 @@ def validar_nivel_minimo_stock(nivel_minimo_stock):
         errores.append("El nivel mínimo de stock no puede ser negativo.")
 
     # Validar que el nivel_minimo_stock sea un número entero.
-    if not isinstance(nivel_minimo_stock, int):
-        errores.append("El nivel mínimo de stock debe ser un número entero.")
-
+   
     if errores:
         raise ValidationError(errores)  # Lanzar una excepción con la lista de errores si hubo problemas
     
@@ -199,8 +196,8 @@ def validar_precio(precio):
     if precio< 0:
         errores.append("El precio no puede ser negativo.")
 
-    if not precio.isdigit():
-        raise ValidationError('El precio solo debe contener números.')
+    if not str(precio).isdigit():
+       raise ValidationError('El precio solo debe contener números.')
 
     # Validar que el precio de venta sea un número decimal o entero.
 
@@ -417,3 +414,14 @@ def validar_total_pedido(pedido):
     # Validación de salario negativo
     if pedido < 0:
         raise ValidationError('El pedido no puede ser negativo.')
+    
+def validar_documento(value, tipo_documento):
+    """
+    Función de validación para el campo 'documento' en el modelo Clientes.
+    """
+    if tipo_documento.nombre == 'Identidad' and len(value) != 13:
+        raise ValidationError('El documento de identidad debe tener 13 dígitos.')
+    elif tipo_documento.nombre == 'RTN' and len(value) != 14:
+        raise ValidationError('El RTN debe tener 14 dígitos.')
+    elif tipo_documento.nombre == 'Pasaporte' and len(value) != 13:
+        raise ValidationError('El pasaporte debe tener 13 dígitos.')

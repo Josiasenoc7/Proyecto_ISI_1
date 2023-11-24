@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from DistribuidoraCarne.views import TipoCargoListView,TipoDocumentoListView, CategoriaListView, ClientesListView, EmpleadosListView, ProveedorListView, ProductoListView,ImpuestoListView, EncabezadoFacturaListView, HistorialCargoListView,PrecioHistoricoListView,ParametrosImpuestosListView
+from DistribuidoraCarne.views import CAIListView,EntregaListView,PedidoListView,MetodoPagoListView,TipoCargoListView,TipoDocumentoListView, CategoriaListView, ClientesListView, EmpleadosListView, ProveedorListView, ProductoListView,ImpuestoListView, EncabezadoFacturaListView, HistorialCargoListView,PrecioHistoricoListView,ParametrosImpuestosListView
 
 
 
@@ -34,5 +34,8 @@ urlpatterns = [
     path('HistorialCargoListView/', HistorialCargoListView.as_view(), name='historial-cargo-list'),
     path('PrecioHistoricoListView/', PrecioHistoricoListView.as_view(), name='precio-historico-list'),
     path('ParametrosImpuestosListView/', ParametrosImpuestosListView.as_view(), name='parametro-impuesto-list'),
-
+    path('CAIListView/', CAIListView.as_view(), name='cailist-list'),
+    path('EntregaListView/', EntregaListView.as_view(), name='entrega-list'),
+    path('PedidoListView/', PedidoListView.as_view(), name='pedido-list'),
+    path('MetodoPagoListView/', MetodoPagoListView.as_view(), name='metodo-pago-list'),
 ]
