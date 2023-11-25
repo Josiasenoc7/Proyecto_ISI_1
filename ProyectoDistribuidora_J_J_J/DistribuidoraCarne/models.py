@@ -1,6 +1,6 @@
 from django.db import models
 # Asumiendo que las validaciones se encuentran correctamente definidas en el archivo 'validaciones.py'
-from DistribuidoraCarne.validaciones import  validar_Total_Cotizacion, validar_fechas, validar_total_pedido, validar_fecha_emision, validar_rango_inicial, validar_rango_final, validar_nombre, validar_telefono, validar_correo, validar_date_time, validar_descripcion, validar_estado, validar_direccion, validar_rtn, validar_fecha_nacimiento, validar_nivel_maximo_stock, validar_nivel_minimo_stock, validar_stock ,validar_salario, validar_fecha_actualizacion, validar_valor_impuesto, validar_precio
+from DistribuidoraCarne.validaciones import  validar_Total_Cotizacion, validar_total_pedido, validar_nombre, validar_telefono, validar_correo, validar_date_time, validar_descripcion, validar_estado, validar_direccion, validar_rtn, validar_fecha_nacimiento, validar_nivel_maximo_stock, validar_nivel_minimo_stock, validar_stock ,validar_salario, validar_fecha_actualizacion, validar_valor_impuesto, validar_precio
 
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=50, validators=[validar_nombre])
@@ -35,11 +35,11 @@ class Sucursal(models.Model):
         verbose_name_plural = 'Sucursales'
 
 class CAI(models.Model):
-    rango_inicial_factura = models.IntegerField(validators= [validar_rango_inicial])
-    rango_final_factura = models.IntegerField(validators= [validar_rango_final])
-    fecha_emision = models.DateField(validators= [validar_fecha_emision])
+    rango_inicial_factura = models.IntegerField()
+    rango_final_factura = models.IntegerField()
+    fecha_emision = models.DateField()
     fecha_vencimiento = models.DateField()
-    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, validators= [validar_nombre])
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
     tipo_comprobante = models.CharField(max_length=20)
     activo = models.BooleanField()
 
@@ -80,7 +80,7 @@ class HistorialCargo(models.Model):
     fecha_fin = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.nombre_empleado} - {self.tipo_cargo}"
+        return f"{self.nombre_empleado}"
 
 class Clientes(models.Model):
     tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.CASCADE, default=1)
@@ -173,7 +173,7 @@ class Pedido(models.Model):
 
 class PrecioHistorico(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    fecha_inicio = models.DateField(validators=[validar_fechas])
+    fecha_inicio = models.DateField()
     fecha_final = models.DateField()
     fecha_modificacion = models.DateField(auto_now_add=True)
     precio_anterior = models.DecimalField(max_digits=10, decimal_places=2, validators=[validar_precio])

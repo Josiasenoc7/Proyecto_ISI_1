@@ -426,20 +426,5 @@ def validar_documento(value, tipo_documento):
     elif tipo_documento.nombre == 'Pasaporte' and len(value) != 13:
         raise ValidationError('El pasaporte debe tener 13 dígitos.')
 
-def validar_rango_inicial(rango_inicial_factura):
-    if rango_inicial_factura< 0:
-        raise ValidationError('El rango inicial de factura no puede ser un número negativo.')
 
-
-def validar_rango_final(rango_final_factura, rango_inicial_factura):
-    if rango_final_factura <= rango_inicial_factura:
-        raise ValidationError('El rango final de factura debe ser mayor que el rango inicial.')
-    
-def validar_fecha_emision(fecha_emision, fecha_vencimiento):
-    if fecha_emision >= fecha_vencimiento:
-        raise ValidationError('La fecha de emisión debe ser anterior a la fecha de vencimiento.')
-    
-def validar_fechas(fecha_inicio, fecha_final):
-    if fecha_inicio >= fecha_final:
-        raise ValidationError('La fecha de inicio debe ser anterior a la fecha final.')
 
