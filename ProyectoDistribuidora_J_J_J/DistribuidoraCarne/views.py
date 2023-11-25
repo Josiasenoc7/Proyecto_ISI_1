@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Categoria, CAI, Pedido, Entrega, MetodoPago,  Clientes, Empleados, Producto, Proveedor, Sucursal, TipoCargo,TipoDocumento,Impuesto, EncabezadoFactura, HistorialCargo,Parametros_impuestos,PrecioHistorico
+from .models import Categoria, FacturaEnc, FacturaDet, ComprasDet, ComprasEnc,CAI, Pedido, Entrega, MetodoPago,  Clientes, Empleados, Producto, Proveedor, Sucursal, TipoCargo,TipoDocumento,Impuesto,HistorialCargo,Parametros_impuestos,PrecioHistorico
 from django.urls import reverse_lazy
 
 
@@ -249,29 +249,6 @@ class ImpuestoDeleteView(DeleteView):
     success_url = reverse_lazy('impuesto-list')
 
 
-#Encabezado de Factura
-class EncabezadoFacturaListView(ListView):
-    model = EncabezadoFactura
-    template_name = 'encabezado_factura_list.html'
-    context_object_name = 'encabezados_factura'
-
-class EncabezadoFacturaCreateView(CreateView):
-    model = EncabezadoFactura
-    template_name = 'encabezado_factura_form.html'
-    fields = ['nombre_negocio', 'direccion_negocio', 'correo', 'rtn', 'telefono' ]
-    success_url = reverse_lazy('encabezado_factura-list')
-
-class EncabezadoFacturaUpdateView(UpdateView):
-    model = EncabezadoFactura
-    template_name = 'encabezado_factura_form.html'
-    fields = ['nombre_negocio', 'direccion_negocio', 'correo', 'rtn', 'telefono' ]
-    success_url = reverse_lazy('encabezado_factura-list')
-
-class EncabezadoFacturaDeleteView(DeleteView):
-    model = EncabezadoFactura
-    template_name = 'encabezado_factura_confirm_delete.html'
-    success_url = reverse_lazy('encabezado_factura-list')
-
 # Vistas para HistorialCargo
 
 class HistorialCargoListView(ListView):
@@ -481,4 +458,120 @@ class MetodoPagoDeleteView(DeleteView):
     context_object_name = 'metodopago'
     success_url = reverse_lazy('metodopago_list')
 
+class ComprasEncListView(ListView):
+    model = ComprasEnc
+    template_name = 'comprasenc_list.html'
+    context_object_name = 'comprasenc'
 
+class ComprasEncDetailView(DetailView):
+    model = ComprasEnc
+    template_name = 'comprasenc_detail.html'
+    context_object_name = 'comprasenc'
+
+class ComprasEncCreateView(CreateView):
+    model = ComprasEnc
+    template_name = 'comprasenc_form.html'
+    fields = '__all__'
+    success_url = '/'
+
+class ComprasEncUpdateView(UpdateView):
+    model = ComprasEnc
+    template_name = 'comprasenc_form.html'
+    fields = '__all__'
+    context_object_name = 'comprasenc'
+    success_url = '/'
+
+class ComprasEncDeleteView(DeleteView):
+    model = ComprasEnc
+    template_name = 'comprasenc_confirm_delete.html'
+    context_object_name = 'comprasenc'
+    success_url = '/'
+
+class ComprasDetListView(ListView):
+    model = ComprasDet
+    template_name = 'comprasdet_list.html'
+    context_object_name = 'comprasdet'
+
+class ComprasDetDetailView(DetailView):
+    model = ComprasDet
+    template_name = 'comprasdet_detail.html'
+    context_object_name = 'comprasdet'
+
+class ComprasDetCreateView(CreateView):
+    model = ComprasDet
+    template_name = 'comprasdet_form.html'
+    fields = '__all__'
+    success_url = '/'
+
+class ComprasDetUpdateView(UpdateView):
+    model = ComprasDet
+    template_name = 'comprasdet_form.html'
+    fields = '__all__'
+    context_object_name = 'comprasdet'
+    success_url = '/'
+
+class ComprasDetDeleteView(DeleteView):
+    model = ComprasDet
+    template_name = 'comprasdet_confirm_delete.html'
+    context_object_name = 'comprasdet'
+    success_url = '/'
+
+# Vistas para FacturaEnc
+class FacturaEncListView(ListView):
+    model = FacturaEnc
+    template_name = 'facturaenc_list.html'
+    context_object_name = 'facturaenc'
+
+class FacturaEncDetailView(DetailView):
+    model = FacturaEnc
+    template_name = 'facturaenc_detail.html'
+    context_object_name = 'facturaenc'
+
+class FacturaEncCreateView(CreateView):
+    model = FacturaEnc
+    template_name = 'facturaenc_form.html'
+    fields = '__all__'
+    success_url = '/'
+
+class FacturaEncUpdateView(UpdateView):
+    model = FacturaEnc
+    template_name = 'facturaenc_form.html'
+    fields = '__all__'
+    context_object_name = 'facturaenc'
+    success_url = '/'
+
+class FacturaEncDeleteView(DeleteView):
+    model = FacturaEnc
+    template_name = 'facturaenc_confirm_delete.html'
+    context_object_name = 'facturaenc'
+    success_url = '/'
+
+# Vistas para FacturaDet
+class FacturaDetListView(ListView):
+    model = FacturaDet
+    template_name = 'facturadet_list.html'
+    context_object_name = 'facturadet'
+
+class FacturaDetDetailView(DetailView):
+    model = FacturaDet
+    template_name = 'facturadet_detail.html'
+    context_object_name = 'facturadet'
+
+class FacturaDetCreateView(CreateView):
+    model = FacturaDet
+    template_name = 'facturadet_form.html'
+    fields = '__all__'
+    success_url = '/'
+
+class FacturaDetUpdateView(UpdateView):
+    model = FacturaDet
+    template_name = 'facturadet_form.html'
+    fields = '__all__'
+    context_object_name = 'facturadet'
+    success_url = '/'
+
+class FacturaDetDeleteView(DeleteView):
+    model = FacturaDet
+    template_name = 'facturadet_confirm_delete.html'
+    context_object_name = 'facturadet'
+    success_url = '/'
