@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, CAI, Pedido, Entrega, MetodoPago, Clientes, Empleados, Producto, Proveedor, Inventario,TipoCargo,TipoDocumento,Sucursal, Devoluciones, Cotizacion,Impuesto, EncabezadoFactura, PrecioHistorico, Parametros_impuestos, HistorialCargo, Correo,Telefono
+from .models import Categoria, ComprasDet, ComprasEnc, FacturaDet, FacturaEnc, CAI, Pedido, Entrega, MetodoPago, Clientes, Empleados, Producto, Proveedor, Inventario,TipoCargo,TipoDocumento,Sucursal, Devoluciones, Cotizacion,Impuesto, PrecioHistorico, Parametros_impuestos, HistorialCargo, Correo,Telefono
 
 '''
 @admin.register(TipoCargo)
@@ -70,7 +70,6 @@ admin.site.register(Sucursal)
 admin.site.register(Devoluciones)
 admin.site.register(Cotizacion)
 admin.site.register(Impuesto)
-admin.site.register(EncabezadoFactura)
 admin.site.register(HistorialCargo)
 admin.site.register(PrecioHistorico)
 admin.site.register(Parametros_impuestos)
@@ -80,5 +79,9 @@ admin.site.register(CAI)
 admin.site.register(Pedido)
 admin.site.register(Entrega)
 admin.site.register(MetodoPago)
+admin.site.register(ComprasEnc)
+admin.site.register(ComprasDet)
+admin.site.register(FacturaDet)
+admin.site.register(FacturaEnc)
 
 

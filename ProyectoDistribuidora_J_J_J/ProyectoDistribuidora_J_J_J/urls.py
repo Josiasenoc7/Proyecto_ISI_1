@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from DistribuidoraCarne.views import CAIListView,EntregaListView,PedidoListView,MetodoPagoListView,TipoCargoListView,TipoDocumentoListView, CategoriaListView, ClientesListView, EmpleadosListView, ProveedorListView, ProductoListView,ImpuestoListView, EncabezadoFacturaListView, HistorialCargoListView,PrecioHistoricoListView,ParametrosImpuestosListView
+from DistribuidoraCarne.views import CAIListView,FacturaDetListView, FacturaEncListView, ComprasDetListView, ComprasEncListView, EntregaListView,PedidoListView,MetodoPagoListView,TipoCargoListView,TipoDocumentoListView, CategoriaListView, ClientesListView, EmpleadosListView, ProveedorListView, ProductoListView,ImpuestoListView,HistorialCargoListView,PrecioHistoricoListView,ParametrosImpuestosListView
 
 
 
@@ -30,7 +30,6 @@ urlpatterns = [
     path('proveedor/', ProveedorListView.as_view(), name='proveedor-list'),
     path('producto/', ProductoListView.as_view(), name='producto-list'),
     path('impuesto/', ImpuestoListView.as_view(), name='impuesto-list'),
-    path('encabezado_factura/', EncabezadoFacturaListView.as_view(),name='encabezado_factura-list'),
     path('HistorialCargoListView/', HistorialCargoListView.as_view(), name='historial-cargo-list'),
     path('PrecioHistoricoListView/', PrecioHistoricoListView.as_view(), name='precio-historico-list'),
     path('ParametrosImpuestosListView/', ParametrosImpuestosListView.as_view(), name='parametro-impuesto-list'),
@@ -38,4 +37,9 @@ urlpatterns = [
     path('EntregaListView/', EntregaListView.as_view(), name='entrega-list'),
     path('PedidoListView/', PedidoListView.as_view(), name='pedido-list'),
     path('MetodoPagoListView/', MetodoPagoListView.as_view(), name='metodo-pago-list'),
+    path('FacturaDetListView/', FacturaDetListView.as_view(), name= 'factura-det-list'),
+    path('FacturaEncListView/', FacturaEncListView.as_view(), name= 'factura-enc-list'),
+    path('CompraDetListView/', ComprasDetListView.as_view(), name= 'compra-det-list'),
+    path('ComprasEncListView/', ComprasEncListView.as_view(), name='compras-enc-list'),
+
 ]

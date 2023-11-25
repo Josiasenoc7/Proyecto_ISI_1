@@ -255,9 +255,9 @@ def validar_total_pedido(pedido):
 def validar_date_time(date_time):
     # Validación de fecha futura
     if date_time > timezone.now().date():
-        raise ValidationError('La fecha de creación no puede ser en el futuro.')
+        raise ValidationError('La fecha no puede ser en el futuro.')
     if date_time < timezone.now().date(): 
-        raise ValidationError("La fecha de registro no puede ser en el pasado.")
+        raise ValidationError("La fecha no puede ser en el pasado.")
     
 def validar_fecha_actualizacion(date_time):
     # Validación de fecha futura
@@ -301,7 +301,7 @@ def validar_Total_Cotizacion(Total_Cotizacion):
 
     # Validar que el precio de venta sea un valor no negativo.
     if Total_Cotizacion< 0:
-        errores.append("El total de la cotizacion no puede ser un valor negativo.")
+        errores.append("El total no puede ser un valor negativo.")
 
 def validar_numero_tarjeta(numero_tarjeta):
     numero_tarjeta_sin_formato = re.sub(r'\s|-', '', numero_tarjeta)
@@ -413,7 +413,7 @@ def validar_nombre_negocio(nombre):
 def validar_total_pedido(pedido):
     # Validación de salario negativo
     if pedido < 0:
-        raise ValidationError('El pedido no puede ser negativo.')
+        raise ValidationError('El total pedido no puede ser negativo.')
     
 def validar_documento(value, tipo_documento):
     """
@@ -425,3 +425,21 @@ def validar_documento(value, tipo_documento):
         raise ValidationError('El RTN debe tener 14 dígitos.')
     elif tipo_documento.nombre == 'Pasaporte' and len(value) != 13:
         raise ValidationError('El pasaporte debe tener 13 dígitos.')
+
+def validar_rango_inicial(rango_inicial_factura):
+    if rango_inicial_factura< 0:
+        raise ValidationError('El rango inicial de factura no puede ser un número negativo.')
+
+
+def validar_rango_final(rango_final_factura, rango_inicial_factura):
+    if rango_final_factura <= rango_inicial_factura:
+        raise ValidationError('El rango final de factura debe ser mayor que el rango inicial.')
+    
+def validar_fecha_emision(fecha_emision, fecha_vencimiento):
+    if fecha_emision >= fecha_vencimiento:
+        raise ValidationError('La fecha de emisión debe ser anterior a la fecha de vencimiento.')
+    
+def validar_fechas(fecha_inicio, fecha_final):
+    if fecha_inicio >= fecha_final:
+        raise ValidationError('La fecha de inicio debe ser anterior a la fecha final.')
+
