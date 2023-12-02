@@ -330,8 +330,8 @@ def calcular_Campos(sender, instance, **kwargs):
 @receiver(post_save, sender=FacturaDet)
 def aumentar_inventario_postSave(sender, instance, created, **kwargs):
     if created:
-        inventario = instance.producto  # Acceder directamente al objeto Inventario
-        producto = inventario.producto  # Obtener el Producto asociado al Inventario
+        inventario = instance.producto  
+        producto = inventario.producto  
         producto.stock += instance.cantidad
         producto.save()
 
