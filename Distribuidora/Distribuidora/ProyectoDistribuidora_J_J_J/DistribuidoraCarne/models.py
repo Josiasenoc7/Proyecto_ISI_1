@@ -6,30 +6,31 @@ from simple_history.models import HistoricalRecords
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save, post_delete
 from django import forms
+from django.core.exceptions import ObjectDoesNotExist
 
 
 
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=50, default='Identidad')
-    def _str_(self):
+    def __str__(self):
         return self.nombre
     
 class TipoCargo(models.Model):
     nombre = models.CharField(max_length=50, validators=[validar_nombre])
 
-    def _str_(self):
+    def __str__(self):
         return self.nombre
 
 class Correo(models.Model):
     correo = models.CharField(max_length=50, validators=[validar_correo])
 
-    def _str_(self):
+    def __str__(self):
         return self.correo
 
 class Telefono(models.Model):
     telefono = models.CharField(max_length=10, validators=[validar_telefono])
 
-    def _str_(self):
+    def __str__(self):
         return self.telefono
    
 class Clientes(models.Model):
@@ -48,7 +49,7 @@ class Clientes(models.Model):
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'
         
-        def _str_(self):
+        def __str__(self):
             return self.nombre_cliente
 
 class Categoria(models.Model):
@@ -56,7 +57,7 @@ class Categoria(models.Model):
     estado = models.BooleanField(null=True, validators=[validar_estado])
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.nombre_categoria
 
 class Proveedor(models.Model):
@@ -73,7 +74,7 @@ class Proveedor(models.Model):
         verbose_name = 'Proveedor'
         verbose_name_plural = 'Proveedores'
 
-    def _str_(self):
+    def __str__(self):
         return self.nombre_proveedor
     
 class Descuento(models.Model):
@@ -101,7 +102,7 @@ class Impuesto(models.Model):
     fecha_creación = models.DateTimeField(auto_now=True)
     history = HistoricalRecords()
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.nombre_impuesto} - {self.descripción}"
 
     class Meta:
@@ -130,7 +131,7 @@ class Producto(models.Model):
     fecha_creacion = models.DateTimeField(auto_now=True)
     history = HistoricalRecords()
 
-    def _str_(self):
+    def __str__(self):
         return self.nombre_producto
       
 class Inventario(models.Model):
@@ -140,7 +141,7 @@ class Inventario(models.Model):
     Stock_minimo = models.DecimalField(max_digits=10, decimal_places=2)
     Stock_maximo = models.DecimalField(max_digits=10, decimal_places=2)
     
-    def _str_(self):
+    def __str__(self):
         return f"{self.producto}"
     
 class Sucursal(models.Model):
@@ -153,7 +154,7 @@ class Sucursal(models.Model):
     fecha_creacion = models.DateTimeField(auto_now=True)
     
 
-    def _str_(self):
+    def __str__(self):
         return self.nombre_sucursal
 
     class Meta:
@@ -178,7 +179,7 @@ class Empleados(models.Model):
         verbose_name = 'Empleado'
         verbose_name_plural = 'Empleados'
 
-    def _str_(self):
+    def __str__(self):
         return self.nombre_empleado  
 
 class EmpleadosForm(forms.ModelForm):
@@ -198,7 +199,7 @@ class ComprasEncabezado(models.Model):
     fecha_compra=models.DateField(null=True,blank=True, validators=[validar_date_time])
     observacion=models.TextField(blank=True,null=True, validators=[validar_descripcion])
 
-    def str(self):
+    def __str__(self):
         return '{}'.format(self.observacion)
 
     def save(self):
@@ -241,7 +242,7 @@ class ParametroSar(models.Model):
         verbose_name = "Parámetros de Sar"
         verbose_name_plural = "Parámetros de Sar"
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.numero_inicio} - {self.numero_fin}"     
 
 
@@ -266,14 +267,15 @@ class FacturaEncabezado(models.Model):
         
   
 class FacturaDet(models.Model):
-    factura = models.ForeignKey(FacturaEncabezado,on_delete=models.CASCADE)
-    producto=models.ForeignKey(Inventario,on_delete=models.CASCADE)
-    cantidad=models.BigIntegerField(default=0)
-    sub_total=models.FloatField(default=0)
-    descuento=models.FloatField(default=0)
-    total=models.FloatField(default=0)
+    factura = models.ForeignKey(FacturaEncabezado, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Inventario, on_delete=models.CASCADE)
+    cantidad = models.BigIntegerField(default=0)
+    sub_total = models.FloatField(default=0)
+    descuento = models.FloatField(default=0)
+    impuesto = models.ForeignKey(Impuesto, on_delete=models.CASCADE,default=1) 
+    total = models.FloatField(default=0)
 
-    def str(self):
+    def __str__(self):
         return '{}'.format(self.producto)
 
     
@@ -286,8 +288,10 @@ class FacturaDet(models.Model):
         return self.cantidad * self.producto.producto.precio_venta
     
     def impuestos(self):
-        result = (self.cantidad * self.producto.producto.precio_venta) * self.producto.producto.impuesto.valor_impuesto
+        impuesto = self.producto.producto.impuesto.valor_impuesto if self.producto.producto.impuesto else 0
+        result = (self.cantidad * self.producto.producto.precio_venta) * impuesto
         result = result.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+        self.impuesto = result  # Guardar el valor del impuesto en el campo del modelo
         return result
     
     def descuentos(self):
@@ -295,38 +299,50 @@ class FacturaDet(models.Model):
         result = result.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
         return result
     
+
+def get_decimal_value(value):
+    try:
+        return Decimal(str(value))
+    except Exception as e:
+        print(f"Error al convertir a decimal: {e}")
+        return Decimal('0')
+
 @receiver(post_save, sender=FacturaDet)
 def calcular_Campos(sender, instance, **kwargs):
-    detalleFac = instance.detalle
-    elementos = FacturaDet.objects.filter(detalle=detalleFac)
-    impuesto = 0
-    descuento = 0
-    subtotal = 0
+    factura = instance.factura
+    detalles_factura = FacturaDet.objects.filter(factura=factura)
     
-    for j in elementos:
-        subtotal += abs(j.cantidad * j.producto.producto.precio_venta)
-    for j in elementos:
-        descuento += abs((j.cantidad * j.producto.producto.precio_venta) * (j.producto.producto.descuento.valor_descuento))
+    impuesto_total = Decimal('0')
+    descuento_total = Decimal('0')
+    subtotal_total = Decimal('0')
     
-    for j in elementos:
-        impuesto += abs((j.cantidad * j.producto.producto.precio_venta) * (j.producto.producto.impuesto.valor_impuesto))
-
-    instance.detalle.subtotal = subtotal
-    instance.detalle.impuesto = impuesto
-    instance.detalle.descuento = descuento
-    instance.detalle.total = abs(((instance.detalle.subtotal) + (instance.detalle.impuesto)) - (instance.detalle.descuento))
-    instance.detalle.save()
+    for detalle in detalles_factura:
+        subtotal_total += abs(detalle.cantidad * Decimal(str(detalle.producto.producto.precio_venta)))
+        descuento_total += abs(get_decimal_value(detalle.descuento))
+        impuesto_total += abs(get_decimal_value(detalle.impuesto))
+    
+    factura.sub_total = subtotal_total
+    factura.impuesto = impuesto_total
+    factura.descuento = descuento_total
+    factura.total = abs(subtotal_total + impuesto_total - descuento_total)
+    factura.save()
 
 @receiver(post_save, sender=FacturaDet)
 def aumentar_inventario_postSave(sender, instance, created, **kwargs):
     if created:
-        instance.inventario.cantidad = instance.inventario.cantidad - instance.cantidad
-        instance.inventario.save()
+        inventario = instance.producto  # Acceder directamente al objeto Inventario
+        producto = inventario.producto  # Obtener el Producto asociado al Inventario
+        producto.stock += instance.cantidad
+        producto.save()
 
 @receiver(post_delete, sender=FacturaDet)
 def aumentar_inventario_postDelete(sender, instance, **kwargs):
-    instance.inventario.cantidad = instance.inventario.cantidad + instance.cantidad
-    instance.inventario.save() 
+    producto = instance.producto  # Acceder al producto desde FacturaDet
+    if hasattr(producto, 'inventario'):  # Verificar si el producto tiene relación con Inventario
+        inventario = producto.inventario  # Obtener el Inventario relacionado con el Producto
+        inventario.cantidad += instance.cantidad
+        inventario.save()
+
      
 
 
