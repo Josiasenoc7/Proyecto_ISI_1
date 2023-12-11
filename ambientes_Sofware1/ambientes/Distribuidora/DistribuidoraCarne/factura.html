@@ -1,0 +1,180 @@
+html de factura <!-- {% load static %}
+    {% load encode_static %} -->
+    
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Factura</title>
+    
+        <style type="text/css">
+            @page{
+                size: letter;
+                margin: 2cm;
+                font-size: 14px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            footer {
+                position: absolute;
+                bottom: 20px;
+                width: 100%;
+                text-align: right;
+                font-size: 12px;
+            }
+    
+        .table td .numero{
+            text-align: right;
+        }
+        .enc{
+            text-align: center;
+        }
+        .title{
+            text-align: center;
+        }
+        .enc2{
+            text-align: left;
+        }
+        body {
+                font-family: Arial, sans-serif; /* Puedes cambiar la fuente aquí */
+                font-size: 14px; /* Puedes cambiar el tamaño de la fuente aquí */
+            }
+    
+            h1 {
+                font-size: 24px; /* Tamaño de letra para el título principal */
+            }
+    
+            h2 {
+                font-size: 18px; /* Tamaño de letra para subtítulos */
+            }
+    
+            p, td {
+                font-size: 12px; /* Tamaño de letra para párrafos y celdas de la tabla */
+            }
+            thead{
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="card">
+                <div class="list-group" id="enc">
+                    <table style="width: 100%;">
+                        <tr>
+                            <div class="card-header">
+                                <h2 id="title" style="line-height: 2; font-size: 20px"><strong><center>Distribuidora de Carne JJJ</center></strong></h2>
+                            </div>
+                            <td style="width: 30%; vertical-align: middle;">
+                                <img src="./Logo_Distribuidora_de_Carne_JJJ.JPG" width="100" height="100" alt="Logo de imagen">
+                            </td>
+                            <td style="text-align: right;">
+                                <p style="line-height: 1;">Factura No°: {{ encabezado.consecutivo }}</p>
+                                 
+                                <p style="line-height: 1;">RTN: {{ encabezado.rtn }}</p>
+    
+                                <p style="line-height: 1;">C.A.I: {{ encabezado.cai|slice:"0:6" }}-{{ encabezado.cai|slice:"6:12" }}-{{ encabezado.cai|slice:"12:18" }}-{{ encabezado.cai|slice:"18:24" }}-{{ encabezado.cai|slice:"24:30" }}-{{ encabezado.cai|slice:"30:32" }}</p></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="list-group" id="enc2">
+                        <p style="line-height: 1;">Sucursal: {{ encabezado.sucursal_name }}</p>
+                        <p style="line-height: 1;">Dirección: {{ encabezado.direccion_sucursal }}</p>
+                        <p style="line-height: 1;">Fecha: {{ encabezado.fechaPago }}</p>
+                        <p style="line-height: 1;">Hora: {{ encabezado.horafactura }}</p>
+                        <p style="line-height: 1;">Cliente: {{ encabezado.cliente }}</p>
+                        <p style="line-height: 1;">Documento Cliente: {{ encabezado.cliente.documento }}</p>
+                        <p style="line-height: 1;">Atendido por: {{ encabezado.empleado.nombre_empleado }} {{ encabezado.empleado.apellido_empleado }}</p>
+                        <p style="line-height: 1;">Rango inicial: {{ encabezado.numero_inicio }}-{{ encabezado.sucursal }}-{{ encabezado.numero_fin }}-{{ encabezado.parametros.rango_inicial }} 
+                                / Rango final: {{ encabezado.numero_inicio }}-{{ encabezado.sucursal }}-{{ encabezado.numero_fin }}-{{ encabezado.parametros.rango_final_factura }}</p>
+                        <p style="line-height: 1;">Fecha de Emisión: {{ encabezado.parametros.fecha_emision }} / Fecha Límite: {{ encabezado.parametros.fecha_limite }}</p>                           
+                         
+                    </div>
+                    <!--<table class="" style="padding-right: 0.1cm;">
+    
+                        <tbody>
+                            <tr>
+                                <td>RTN: <strong>{{ encabezado.rtn }}</strong></td>
+                                <td>Número de Factura: {{ encabezado.numeroFactura }}</td>
+                                <td>Fecha: {{ encabezado.fechaPago}}</td>      
+                                <td>Hora: {{ encabezado.horaFactura }}</td>                     
+                            </tr>
+                            <tr>
+                                <td>Cliente: {{ encabezado.idCliente }}</td>
+                                <td>C.A.I: {{ encabezado.cai }}</td>
+                                
+                            </tr>
+                            </tbody>
+                    </table>-->
+                    <hr>
+                    <br>
+                </div>
+                <table class="table" style="padding-top: 0.1cm;">
+                    <thead>
+                        <tr style="text-align: center;">
+                            <th>ISBN</th>
+                            <th>Libro</th>
+                            <th>Precio Unitario</th>
+                            <th>Cantidad</th>
+                            <th>Importe</th>
+                            <th>Impuesto</th>
+                            <th>Descuento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- {% for detalle_libro in detalles_venta %}   -->
+                        <tr style="text-align: center;">
+                            <td class="numero" style="text-align:center ;">{{ detalle_libro.producto.book.isbn }}</td> 
+                            <td><span class="numero" style="text-align:center ;">{{ detalle_libro.producto.book.title }}</td></span>  
+                            <td class="numero" style="text-align:center ;">L. {{ detalle_libro.producto.book.price }}</td>                              
+                            <td class="numero" style="text-align:center ;">{{ detalle_libro.cantidad }}</td>
+                            <td class="numero" style="text-align:center ;">L. {{ detalle_libro.producto.book.price * detalle_libro.cantidad }}</td>
+                            <td class="numero" style="text-align:center ;">L. {{ detalle_libro.impuesto }}</td>
+                            <td class="numero" style="text-align:center ;">L. {{ detalle_libro.descuento }}</td>
+                        </tr>
+                        <!-- {% endfor %}  -->
+                    </tbody>
+                 </table>
+                 <br>
+                 <hr>
+                 <br>
+                 <table class="table" style="padding-top: 0.1cm;">
+                    <tbody>
+                        <!-- {% for item in detalles_factura %}  -->
+                        <!-- Aquí empieza la tabla para mostrar los datos en la izquierda y derecha -->
+                        <tr>
+                            <!--<td colspan="5"></td>-->
+                            <td><h4>Sub Total:</h4></td>
+                            <td colspan="6"></td>
+                            <td class="numero">L. {{ item.sub_total }}</td>
+                        </tr>
+                        <tr>
+                            <!--<td colspan="5"></td>-->
+                            <td><h4>Descuentos:</h4></td>
+                            <td colspan="6"></td>
+                            <td class="numero">L. {{ item.descuento }}</td>
+                        </tr>
+                        <tr>
+                            <!--<td colspan="5"></td>-->
+                            <td><h4>Impuestos:</h4></td>
+                            <td colspan="6"></td>
+                            <td class="numero">L. {{ item.impuesto }}</td>
+                        </tr>
+                        <tr>
+                            <!--<td colspan="5"></td>-->
+                            <td><h4>Total:</h4></td>
+                            <td colspan="6"></td>
+                            <td class="numero">L. {{ item.total }} </td>
+                        </tr>
+                        <!-- {% endfor %} -->
+                    </tbody>
+                 </table>
+                 <br>
+                 <hr>
+                 <br>
+             </div>
+        </div>
+        
+    </body>
+    </html>
